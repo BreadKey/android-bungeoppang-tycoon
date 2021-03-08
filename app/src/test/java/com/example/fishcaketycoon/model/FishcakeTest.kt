@@ -11,22 +11,27 @@ class FishcakeTest{
     fun bakeTest() {
         val fishcake = Fishcake()
 
-        val testSubscriber = TestObserver<Doneness>()
+        val testSubscriber = TestObserver<Fishcake.State>()
 
-        fishcake.doneness.subscribe(testSubscriber)
+        fishcake.state.subscribe(testSubscriber)
 
-        fishcake.bake(Fishcake.MEDIUM_SECONDS)
-        fishcake.bake(Fishcake.WELL_DONE_SECONDS - Fishcake.MEDIUM_SECONDS)
-        fishcake.bake(Fishcake.OVERCOOKED_SECONDS - Fishcake.WELL_DONE_SECONDS)
+        repeat(Fishcake.OVERCOOKED_SECONDS.toInt()) {
+            fishcake.bake(it.toDouble())
+        }
 
         testSubscriber.assertNoErrors()
         testSubscriber.assertValueCount(Doneness.values().size)
 
         val values = testSubscriber.values()
 
-        assertEquals(Doneness.Rare, values[0])
-        assertEquals(Doneness.Medium, values[1])
-        assertEquals(Doneness.WellDone, values[2])
-        assertEquals(Doneness.Overcooked, values[3])
+        assertEquals(Doneness.Rare, values[0].frontDoneness)
+        assertEquals(Doneness.Medium, values[1].frontDoneness)
+        assertEquals(Doneness.WellDone, values[2].frontDoneness)
+        assertEquals(Doneness.Overcooked, values[3].frontDoneness)
+    }
+
+    @Test
+    fun bakeBackTest() {
+        val fishcake = Fishcake()
     }
 }

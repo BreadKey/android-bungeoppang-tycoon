@@ -7,20 +7,50 @@ enum class Doneness {
     Rare, Medium, WellDone, Overcooked
 }
 
+
 class Fishcake {
-    private val donenessSubject = BehaviorSubject.createDefault<Doneness>(Doneness.Rare)
-    val doneness: Observable<Doneness> = donenessSubject
-    val currentDoneness: Doneness get() = donenessSubject.value
+    data class State(
+        val frontDoneness: Doneness,
+        val backDoneness: Doneness,
+        val isFront: Boolean
+    ) {
+        fun copyWith(
+            frontDoneness: Doneness = this.frontDoneness,
+            backDoneness: Doneness = this.backDoneness,
+            isFront: Boolean = this.isFront
+        ) = State(
+            frontDoneness, backDoneness, isFront
+        )
+    }
+
+    private val stateSubject =
+        BehaviorSubject.createDefault<State>(State(Doneness.Rare, Doneness.Rare, true))
+    val state: Observable<State> = stateSubject.distinct()
+    val currentState: State get() = stateSubject.value
 
     private var bakedSeconds: Double = 0.0
 
     internal fun bake(seconds: Double) {
         bakedSeconds += seconds
 
-        when {
-            bakedSeconds >= OVERCOOKED_SECONDS -> donenessSubject.onNext(Doneness.Overcooked)
-            bakedSeconds >= WELL_DONE_SECONDS -> donenessSubject.onNext(Doneness.WellDone)
-            bakedSeconds >= MEDIUM_SECONDS -> donenessSubject.onNext(Doneness.Medium)
+        val doneness = when {
+            bakedSeconds >= OVERCOOKED_SECONDS -> Doneness.Overcooked
+            bakedSeconds >= WELL_DONE_SECONDS -> Doneness.WellDone
+            bakedSeconds >= MEDIUM_SECONDS -> Doneness.Medium
+            else -> Doneness.Rare
+        }
+
+        if (currentState.isFront) {
+            stateSubject.onNext(currentState.copyWith(frontDoneness = doneness))
+        } else {
+            stateSubject.onNext(currentState.copyWith(backDoneness = doneness))
+        }
+    }
+
+    internal fun flip() {
+        if (currentState.isFront) {
+            bakedSeconds = 0.0
+            stateSubject.onNext(currentState.copyWith(isFront = false))
         }
     }
 

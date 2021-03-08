@@ -19,6 +19,6 @@ class FishcakeTycoonTest {
         tycoon.select(0)
 
         tycoon.update(Fishcake.MEDIUM_SECONDS)
-        assertEquals(Doneness.Medium, tycoon.getFishcakeAt(0)?.currentDoneness)
+        assertEquals(Doneness.Medium, tycoon.getFishcakeAt(0)?.currentState?.frontDoneness)
     }
 }
