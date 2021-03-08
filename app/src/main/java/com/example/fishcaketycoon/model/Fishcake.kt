@@ -10,10 +10,11 @@ enum class Doneness {
 class Fishcake {
     private val donenessSubject = BehaviorSubject.createDefault<Doneness>(Doneness.Rare)
     val doneness: Observable<Doneness> = donenessSubject
+    val currentDoneness: Doneness get() = donenessSubject.value
 
     private var bakedSeconds: Double = 0.0
 
-    fun bake(seconds: Double) {
+    internal fun bake(seconds: Double) {
         bakedSeconds += seconds
 
         when {
