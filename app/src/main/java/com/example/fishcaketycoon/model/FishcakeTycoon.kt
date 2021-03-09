@@ -1,22 +1,50 @@
 package com.example.fishcaketycoon.model
 
-import java.util.*
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class FishcakeTycoon {
+@Singleton
+class FishcakeTycoon @Inject constructor() {
     companion object {
         const val MOLD_COUNT = 9
     }
 
-    private val fishcakes = Array<Fishcake?>(MOLD_COUNT) { null }
-    private val cookedFishcakeQueue = LinkedList<Fishcake>()
+    interface EventListener {
+        fun onCookStart(at: Int, fishcake: Fishcake)
+        fun onCookFinished(at: Int, fishcake: Fishcake)
+    }
 
+    private val fishcakes = Array<Fishcake?>(MOLD_COUNT) { null }
+    private val cookedFishcakes = mutableSetOf<Fishcake>()
+    private val listeners = mutableListOf<EventListener>()
     var seconds = 0.0
         private set
+    private var timer: Disposable? = null
+
+    fun addListener(listener: EventListener) {
+        listeners.add(listener)
+    }
+
+    fun removeListener(listener: EventListener) {
+        listeners.remove(listener)
+    }
 
     fun start() {
         seconds = 0.0
         fishcakes.fill(null)
-        cookedFishcakeQueue.clear()
+        cookedFishcakes.clear()
+
+        timer?.dispose()
+        timer = Observable.interval(1, TimeUnit.SECONDS).subscribe {
+            update(1.0)
+        }
+    }
+
+    fun stop() {
+        timer?.dispose()
     }
 
     fun getFishcakeAt(index: Int): Fishcake? {
@@ -26,19 +54,31 @@ class FishcakeTycoon {
     fun select(index: Int) {
         val fishcake = fishcakes[index]
         if (fishcake == null) {
-            fishcakes[index] = Fishcake()
+            startCook(index)
         } else {
             if (fishcake.currentState.isFront) {
                 fishcake.flip()
             } else {
-                catch(index)
+                finishCook(index)
             }
         }
     }
 
-    private fun catch(index: Int) {
-        cookedFishcakeQueue.add(fishcakes[index]!!)
+    private fun startCook(at: Int) {
+        val fishcake = Fishcake()
+        fishcakes[at] = fishcake
+        listeners.forEach {
+            it.onCookStart(at, fishcake)
+        }
+    }
+
+    private fun finishCook(index: Int) {
+        val fishcake = fishcakes[index]!!
+        cookedFishcakes.add(fishcake)
         fishcakes[index] = null
+        for (listener in listeners) {
+            listener.onCookFinished(index, fishcake)
+        }
     }
 
     internal fun update(delta: Double) {
