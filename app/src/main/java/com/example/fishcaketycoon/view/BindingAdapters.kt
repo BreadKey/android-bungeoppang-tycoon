@@ -3,6 +3,7 @@ package com.example.fishcaketycoon.view
 import android.annotation.SuppressLint
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.fishcaketycoon.R
 import com.example.fishcaketycoon.model.Doneness
@@ -37,4 +38,11 @@ fun setFishcakeState(view: Button, state: Fishcake.State?) {
             }
         }
     }
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("money")
+fun setMoney(view: TextView, money: Int?) {
+    val string = money?.toString() ?: "--"
+    view.text = "$string₩"
 }

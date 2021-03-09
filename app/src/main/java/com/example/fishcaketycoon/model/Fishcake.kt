@@ -9,6 +9,14 @@ enum class Doneness {
 
 
 class Fishcake {
+    companion object {
+        const val MEDIUM_SECONDS = 5.0
+        const val WELL_DONE_SECONDS = 9.0
+        const val OVERCOOKED_SECONDS = 12.0
+        const val DOUGH_COST = 100
+        const val PRICE = 250
+    }
+
     data class State(
         val frontDoneness: Doneness,
         val backDoneness: Doneness,
@@ -52,11 +60,5 @@ class Fishcake {
             bakedSeconds = 0.0
             stateSubject.onNext(currentState.copyWith(isFront = false))
         }
-    }
-
-    companion object {
-        const val MEDIUM_SECONDS = 5.0
-        const val WELL_DONE_SECONDS = 9.0
-        const val OVERCOOKED_SECONDS = 12.0
     }
 }

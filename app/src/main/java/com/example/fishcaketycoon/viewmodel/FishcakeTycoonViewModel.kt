@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.fishcaketycoon.model.Fishcake
 import com.example.fishcaketycoon.model.FishcakeTycoon
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 
@@ -14,13 +15,19 @@ class FishcakeTycoonViewModel @Inject constructor(private val fishcakeTycoon: Fi
     private val fishcakesSubscribers = Array<Disposable?>(FishcakeTycoon.MOLD_COUNT) {
         null
     }
+    private val tycoonSubscribers = CompositeDisposable()
 
     val molds = List(FishcakeTycoon.MOLD_COUNT) {
         ObservableField<Fishcake.State?>()
     }
 
+    val money = ObservableField<Int>()
+
     init {
         fishcakeTycoon.addListener(this)
+        tycoonSubscribers.addAll(fishcakeTycoon.money.subscribe {
+            money.set(it)
+        })
         fishcakeTycoon.start()
     }
 
@@ -30,6 +37,7 @@ class FishcakeTycoonViewModel @Inject constructor(private val fishcakeTycoon: Fi
         fishcakesSubscribers.forEach {
             it?.dispose()
         }
+        tycoonSubscribers.clear()
         super.onCleared()
     }
 
@@ -43,6 +51,9 @@ class FishcakeTycoonViewModel @Inject constructor(private val fishcakeTycoon: Fi
     override fun onCookFinished(at: Int, fishcake: Fishcake) {
         fishcakesSubscribers[at]?.dispose()
         molds[at].set(null)
+
+        // Just Test
+        fishcakeTycoon.sale(fishcake)
     }
 
     fun select(index: Int) {
