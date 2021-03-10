@@ -2,7 +2,6 @@ package com.example.fishcaketycoon.view
 
 import android.annotation.SuppressLint
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.fishcaketycoon.R
@@ -23,22 +22,19 @@ fun setFishcakeState(view: Button, state: Fishcake.State?) {
             state.backDoneness
         }
 
-        when (doneness) {
-            Doneness.Rare -> {
-                view.foreground = view.resources.getDrawable(R.drawable.rare, null)
-            }
-            Doneness.Medium -> {
-                view.foreground = view.resources.getDrawable(R.drawable.medium, null)
-            }
-            Doneness.WellDone -> {
-                view.foreground = view.resources.getDrawable(R.drawable.well_done, null)
-            }
-            Doneness.Overcooked -> {
-                view.foreground = view.resources.getDrawable(R.drawable.overcooked, null)
-            }
-        }
+        view.foreground = view.resources.getDrawable(doneness.drawable, null)
     }
 }
+
+val Doneness.drawable
+    get(): Int {
+        return when (this) {
+            Doneness.Rare -> R.drawable.rare
+            Doneness.Medium -> R.drawable.medium
+            Doneness.WellDone -> R.drawable.well_done
+            Doneness.Overcooked -> R.drawable.overcooked
+        }
+    }
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("money")

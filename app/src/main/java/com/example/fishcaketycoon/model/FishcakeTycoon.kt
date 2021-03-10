@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class FishcakeTycoon @Inject constructor() {
     companion object {
-        const val MOLD_COUNT = 9
+        const val MOLD_LENGTH = 9
         const val START_MONEY = 1000
     }
 
@@ -19,8 +19,9 @@ class FishcakeTycoon @Inject constructor() {
         fun onCookFinished(at: Int, fishcake: Fishcake)
     }
 
-    private val fishcakes = Array<Fishcake?>(MOLD_COUNT) { null }
-    private val cookedFishcakes = mutableSetOf<Fishcake>()
+    private val fishcakes = Array<Fishcake?>(MOLD_LENGTH) { null }
+    private val cookingFishcakes = mutableListOf<Fishcake>()
+    private val cookedFishcakes = mutableListOf<Fishcake>()
     private val listeners = mutableListOf<EventListener>()
     var seconds = 0.0
         private set
@@ -42,8 +43,13 @@ class FishcakeTycoon @Inject constructor() {
         seconds = 0.0
         fishcakes.fill(null)
         cookedFishcakes.clear()
+        cookingFishcakes.clear()
         moneySubject.onNext(START_MONEY)
 
+        resume()
+    }
+
+    fun resume() {
         timer?.dispose()
         timer = Observable.interval(1, TimeUnit.SECONDS).subscribe {
             update(1.0)
@@ -51,6 +57,10 @@ class FishcakeTycoon @Inject constructor() {
     }
 
     fun stop() {
+        pause()
+    }
+
+    fun pause() {
         timer?.dispose()
     }
 
@@ -75,8 +85,10 @@ class FishcakeTycoon @Inject constructor() {
         if (currentMoney >= Fishcake.DOUGH_COST) {
             val fishcake = Fishcake()
             fishcakes[at] = fishcake
-            listeners.forEach {
-                it.onCookStart(at, fishcake)
+            cookingFishcakes.add(fishcake)
+
+            for (listener in listeners) {
+                listener.onCookStart(at, fishcake)
             }
 
             moneySubject.onNext(currentMoney - Fishcake.DOUGH_COST)
@@ -85,20 +97,23 @@ class FishcakeTycoon @Inject constructor() {
 
     private fun finishCook(index: Int) {
         val fishcake = fishcakes[index]!!
-        cookedFishcakes.add(fishcake)
         fishcakes[index] = null
+        cookingFishcakes.remove(fishcake)
+        cookedFishcakes.add(fishcake)
+
         for (listener in listeners) {
             listener.onCookFinished(index, fishcake)
         }
     }
 
     fun sale(fishcake: Fishcake) {
+        cookedFishcakes.remove(fishcake)
         moneySubject.onNext(currentMoney + Fishcake.PRICE)
     }
 
     internal fun update(delta: Double) {
         seconds += delta
-        fishcakes.filterNotNull().forEach { fishcake ->
+        cookingFishcakes.forEach { fishcake ->
             fishcake.bake(delta)
         }
     }

@@ -12,12 +12,12 @@ import javax.inject.Inject
 @HiltViewModel
 class FishcakeTycoonViewModel @Inject constructor(private val fishcakeTycoon: FishcakeTycoon) :
     ViewModel(), FishcakeTycoon.EventListener {
-    private val fishcakesSubscribers = Array<Disposable?>(FishcakeTycoon.MOLD_COUNT) {
+    private val fishcakesSubscribers = Array<Disposable?>(FishcakeTycoon.MOLD_LENGTH) {
         null
     }
     private val tycoonSubscribers = CompositeDisposable()
 
-    val molds = List(FishcakeTycoon.MOLD_COUNT) {
+    val molds = List(FishcakeTycoon.MOLD_LENGTH) {
         ObservableField<Fishcake.State?>()
     }
 
@@ -58,5 +58,13 @@ class FishcakeTycoonViewModel @Inject constructor(private val fishcakeTycoon: Fi
 
     fun select(index: Int) {
         fishcakeTycoon.select(index)
+    }
+
+    fun pause() {
+        fishcakeTycoon.pause()
+    }
+
+    fun resume() {
+        fishcakeTycoon.resume()
     }
 }
