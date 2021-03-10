@@ -2,6 +2,7 @@ package com.example.fishcaketycoon.viewmodel
 
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
+import com.example.fishcaketycoon.model.Cream
 import com.example.fishcaketycoon.model.Fishcake
 import com.example.fishcaketycoon.model.FishcakeTycoon
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,5 +67,10 @@ class FishcakeTycoonViewModel @Inject constructor(private val fishcakeTycoon: Fi
 
     fun resume() {
         fishcakeTycoon.resume()
+    }
+
+    fun canAddCream(at: Int) = fishcakeTycoon.getFishcakeAt(at)?.canAddCream == true
+    fun addCream(at: Int, cream: Cream) {
+        fishcakeTycoon.addCream(at, cream)
     }
 }

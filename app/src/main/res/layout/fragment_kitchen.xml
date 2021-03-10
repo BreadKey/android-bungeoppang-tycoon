@@ -13,71 +13,120 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mold">
-        <GridLayout
+        <LinearLayout
+            android:id="@+id/cream_tray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/tray"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
+            android:gravity="end">
+            <ImageView
+                android:id="@+id/chou_cream"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/chou_cream_bottle" />
+            <ImageView
+                android:id="@+id/red_bean_cream"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/red_bean_cream_bottle" />
+        </LinearLayout>
+        <GridLayout
+            android:id="@+id/mold_grid"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/cream_tray"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:columnCount="3"
             android:rowCount="3">
-            <Button
+            <ImageButton
                 android:backgroundTint="@color/mold"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
                 app:fishcakeState="@{viewModel.molds[0]}"
                 android:onClick="@{() -> viewModel.select(0)}"
                 />
-            <Button
+            <ImageButton
                 android:backgroundTint="@color/mold"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
                 app:fishcakeState="@{viewModel.molds[1]}"
                 android:onClick="@{() -> viewModel.select(1)}"
                 />
-            <Button
+            <ImageButton
                 android:backgroundTint="@color/mold"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
                 app:fishcakeState="@{viewModel.molds[2]}"
                 android:onClick="@{() -> viewModel.select(2)}"
                 />
-            <Button
+            <ImageButton
                 android:backgroundTint="@color/mold"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
                 app:fishcakeState="@{viewModel.molds[3]}"
                 android:onClick="@{() -> viewModel.select(3)}"
                 />
-            <Button
-                android:backgroundTint="#57555C"
+            <ImageButton
+                android:backgroundTint="@color/mold"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
                 app:fishcakeState="@{viewModel.molds[4]}"
                 android:onClick="@{() -> viewModel.select(4)}"
                 />
-            <Button
+            <ImageButton
                 android:backgroundTint="@color/mold"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
                 app:fishcakeState="@{viewModel.molds[5]}"
                 android:onClick="@{() -> viewModel.select(5)}"
                 />
-            <Button
+            <ImageButton
                 android:backgroundTint="@color/mold"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
                 app:fishcakeState="@{viewModel.molds[6]}"
                 android:onClick="@{() -> viewModel.select(6)}"
                 />
-            <Button
+            <ImageButton
                 android:backgroundTint="@color/mold"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
                 app:fishcakeState="@{viewModel.molds[7]}"
                 android:onClick="@{() -> viewModel.select(7)}"
                 />
-            <Button
+            <ImageButton
                 android:backgroundTint="@color/mold"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
                 app:fishcakeState="@{viewModel.molds[8]}"
                 android:onClick="@{() -> viewModel.select(8)}"
                 />
