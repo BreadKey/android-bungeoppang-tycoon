@@ -81,6 +81,10 @@ class FishcakeTycoon @Inject constructor() {
         }
     }
 
+    fun addCream(at: Int, cream: Cream) {
+        fishcakes[at]?.addCream(cream)
+    }
+
     private fun startCook(at: Int) {
         if (currentMoney >= Fishcake.DOUGH_COST) {
             val fishcake = Fishcake()

@@ -7,6 +7,9 @@ enum class Doneness {
     Rare, Medium, WellDone, Overcooked
 }
 
+enum class Cream {
+    RedBean, Chou
+}
 
 class Fishcake {
     companion object {
@@ -20,21 +23,24 @@ class Fishcake {
     data class State(
         val frontDoneness: Doneness,
         val backDoneness: Doneness,
-        val isFront: Boolean
+        val isFront: Boolean,
+        val cream: Cream?
     ) {
         fun copyWith(
             frontDoneness: Doneness = this.frontDoneness,
             backDoneness: Doneness = this.backDoneness,
-            isFront: Boolean = this.isFront
+            isFront: Boolean = this.isFront,
+            cream: Cream? = this.cream
         ) = State(
-            frontDoneness, backDoneness, isFront
+            frontDoneness, backDoneness, isFront, cream
         )
     }
 
     private val stateSubject =
-        BehaviorSubject.createDefault<State>(State(Doneness.Rare, Doneness.Rare, true))
+        BehaviorSubject.createDefault<State>(State(Doneness.Rare, Doneness.Rare, true, null))
     val state: Observable<State> = stateSubject.distinct()
     val currentState: State get() = stateSubject.value
+    val canAddCream: Boolean get() = currentState.isFront && currentState.cream == null
 
     private var bakedSeconds: Double = 0.0
 
@@ -59,6 +65,12 @@ class Fishcake {
         if (currentState.isFront) {
             bakedSeconds = 0.0
             stateSubject.onNext(currentState.copyWith(isFront = false))
+        }
+    }
+
+    internal fun addCream(cream: Cream) {
+        if (canAddCream) {
+            stateSubject.onNext(currentState.copyWith(cream = cream))
         }
     }
 }
