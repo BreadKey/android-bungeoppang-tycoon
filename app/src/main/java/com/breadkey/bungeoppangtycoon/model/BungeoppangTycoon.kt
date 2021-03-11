@@ -1,4 +1,4 @@
-package com.example.fishcaketycoon.model
+package com.breadkey.bungeoppangtycoon.model
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -8,20 +8,20 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FishcakeTycoon @Inject constructor() {
+class BungeoppangTycoon @Inject constructor() {
     companion object {
         const val MOLD_LENGTH = 9
         const val START_MONEY = 1000
     }
 
     interface EventListener {
-        fun onCookStart(at: Int, fishcake: Fishcake)
-        fun onCookFinished(at: Int, fishcake: Fishcake)
+        fun onCookStart(at: Int, bungeoppang: Bungeoppang)
+        fun onCookFinished(at: Int, bungeoppang: Bungeoppang)
     }
 
-    private val fishcakes = Array<Fishcake?>(MOLD_LENGTH) { null }
-    private val cookingFishcakes = mutableListOf<Fishcake>()
-    private val cookedFishcakes = mutableListOf<Fishcake>()
+    private val bungeoppangs = Array<Bungeoppang?>(MOLD_LENGTH) { null }
+    private val cookingBungeoppangs = mutableListOf<Bungeoppang>()
+    private val cookedBungeoppangs = mutableListOf<Bungeoppang>()
     private val listeners = mutableListOf<EventListener>()
     var seconds = 0.0
         private set
@@ -41,9 +41,9 @@ class FishcakeTycoon @Inject constructor() {
 
     fun start() {
         seconds = 0.0
-        fishcakes.fill(null)
-        cookedFishcakes.clear()
-        cookingFishcakes.clear()
+        bungeoppangs.fill(null)
+        cookedBungeoppangs.clear()
+        cookingBungeoppangs.clear()
         moneySubject.onNext(START_MONEY)
 
         resume()
@@ -64,17 +64,17 @@ class FishcakeTycoon @Inject constructor() {
         timer?.dispose()
     }
 
-    fun getFishcakeAt(index: Int): Fishcake? {
-        return fishcakes[index]
+    fun getBungeoppangAt(index: Int): Bungeoppang? {
+        return bungeoppangs[index]
     }
 
     fun select(index: Int) {
-        val fishcake = fishcakes[index]
-        if (fishcake == null) {
+        val bungeoppang = bungeoppangs[index]
+        if (bungeoppang == null) {
             startCook(index)
         } else {
-            if (fishcake.currentState.isFront) {
-                fishcake.flip()
+            if (bungeoppang.currentState.isFront) {
+                bungeoppang.flip()
             } else {
                 finishCook(index)
             }
@@ -82,43 +82,43 @@ class FishcakeTycoon @Inject constructor() {
     }
 
     fun addCream(at: Int, cream: Cream) {
-        fishcakes[at]?.addCream(cream)
+        bungeoppangs[at]?.addCream(cream)
     }
 
     private fun startCook(at: Int) {
-        if (currentMoney >= Fishcake.DOUGH_COST) {
-            val fishcake = Fishcake()
-            fishcakes[at] = fishcake
-            cookingFishcakes.add(fishcake)
+        if (currentMoney >= Bungeoppang.DOUGH_COST) {
+            val bungeoppang = Bungeoppang()
+            bungeoppangs[at] = bungeoppang
+            cookingBungeoppangs.add(bungeoppang)
 
             for (listener in listeners) {
-                listener.onCookStart(at, fishcake)
+                listener.onCookStart(at, bungeoppang)
             }
 
-            moneySubject.onNext(currentMoney - Fishcake.DOUGH_COST)
+            moneySubject.onNext(currentMoney - Bungeoppang.DOUGH_COST)
         }
     }
 
     private fun finishCook(index: Int) {
-        val fishcake = fishcakes[index]!!
-        fishcakes[index] = null
-        cookingFishcakes.remove(fishcake)
-        cookedFishcakes.add(fishcake)
+        val bungeoppang = bungeoppangs[index]!!
+        bungeoppangs[index] = null
+        cookingBungeoppangs.remove(bungeoppang)
+        cookedBungeoppangs.add(bungeoppang)
 
         for (listener in listeners) {
-            listener.onCookFinished(index, fishcake)
+            listener.onCookFinished(index, bungeoppang)
         }
     }
 
-    fun sale(fishcake: Fishcake) {
-        cookedFishcakes.remove(fishcake)
-        moneySubject.onNext(currentMoney + Fishcake.PRICE)
+    fun sale(bungeoppang: Bungeoppang) {
+        cookedBungeoppangs.remove(bungeoppang)
+        moneySubject.onNext(currentMoney + Bungeoppang.PRICE)
     }
 
     internal fun update(delta: Double) {
         seconds += delta
-        cookingFishcakes.forEach { fishcake ->
-            fishcake.bake(delta)
+        cookingBungeoppangs.forEach { bungeoppang ->
+            bungeoppang.bake(delta)
         }
     }
 }

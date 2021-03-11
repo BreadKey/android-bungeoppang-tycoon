@@ -1,4 +1,4 @@
-package com.example.fishcaketycoon.view
+package com.breadkey.bungeoppangtycoon.view
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -8,29 +8,27 @@ import android.graphics.Point
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.fishcaketycoon.R
-import com.example.fishcaketycoon.databinding.FragmentKitchenBinding
-import com.example.fishcaketycoon.model.Cream
-import com.example.fishcaketycoon.model.FishcakeTycoon
-import com.example.fishcaketycoon.viewmodel.FishcakeTycoonViewModel
+import com.breadkey.bungeoppangtycoon.R
+import com.breadkey.bungeoppangtycoon.databinding.FragmentKitchenBinding
+import com.breadkey.bungeoppangtycoon.model.Cream
+import com.breadkey.bungeoppangtycoon.model.BungeoppangTycoon
+import com.breadkey.bungeoppangtycoon.viewmodel.BungeoppangTycoonViewModel
 
 class KitchenFragment : Fragment(R.layout.fragment_kitchen) {
-    private val viewModel: FishcakeTycoonViewModel by activityViewModels()
+    private val viewModel: BungeoppangTycoonViewModel by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentKitchenBinding.bind(view)
         binding.viewModel = viewModel
         setCreamCanDrag(binding.redBeanCream, Cream.RedBean)
         setCreamCanDrag(binding.chouCream, Cream.Chou)
-        repeat(FishcakeTycoon.MOLD_LENGTH) { index ->
+        repeat(BungeoppangTycoon.MOLD_LENGTH) { index ->
             setMoldCanDrop(binding.moldGrid.getChildAt(index), index)
         }
     }

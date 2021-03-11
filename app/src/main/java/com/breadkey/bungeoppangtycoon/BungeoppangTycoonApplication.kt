@@ -1,7 +1,7 @@
-package com.example.fishcaketycoon
+package com.breadkey.bungeoppangtycoon
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class FishcakeTycoonApplication : Application()
+class BungeoppangTycoonApplication : Application()

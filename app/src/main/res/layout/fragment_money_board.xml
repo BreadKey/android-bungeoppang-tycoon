@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.fishcaketycoon.viewmodel.FishcakeTycoonViewModel" />
+            type="com.breadkey.bungeoppangtycoon.viewmodel.BungeoppangTycoonViewModel" />
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

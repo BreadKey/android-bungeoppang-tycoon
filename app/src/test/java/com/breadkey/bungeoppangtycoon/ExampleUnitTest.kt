@@ -1,4 +1,4 @@
-package com.example.fishcaketycoon
+package com.breadkey.bungeoppangtycoon
 
 import org.junit.Test
 

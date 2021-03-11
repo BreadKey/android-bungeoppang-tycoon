@@ -16,7 +16,7 @@
             android:id="@+id/kitchen_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.fishcaketycoon.view.KitchenFragment"/>
+            android:name="com.breadkey.bungeoppangtycoon.view.KitchenFragment"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,6 +28,6 @@
             android:id="@+id/money_board_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.fishcaketycoon.view.MoneyBoardFragment" />
+            android:name="com.breadkey.bungeoppangtycoon.view.MoneyBoardFragment" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

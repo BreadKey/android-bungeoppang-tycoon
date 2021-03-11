@@ -1,4 +1,4 @@
-package com.example.fishcaketycoon.model
+package com.breadkey.bungeoppangtycoon.model
 
 import io.reactivex.rxjava3.observers.TestObserver
 import org.junit.After
@@ -8,15 +8,15 @@ import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
 
-class FishcakeTest{
-    lateinit var fishcake: Fishcake
-    lateinit var testSubscriber: TestObserver<Fishcake.State>
+class BungeoppangTest{
+    lateinit var bungeoppang: Bungeoppang
+    lateinit var testSubscriber: TestObserver<Bungeoppang.State>
 
     @Before
     fun setUp() {
-        fishcake = Fishcake()
+        bungeoppang = Bungeoppang()
         testSubscriber = TestObserver()
-        fishcake.state.subscribe(testSubscriber)
+        bungeoppang.state.subscribe(testSubscriber)
     }
 
     @After
@@ -33,7 +33,7 @@ class FishcakeTest{
 
     @Test
     fun bakeBackTest() {
-        fishcake.flip()
+        bungeoppang.flip()
         bakeUntilOvercooked()
 
         // First state is front and rare
@@ -41,12 +41,12 @@ class FishcakeTest{
     }
 
     private fun bakeUntilOvercooked() {
-        repeat(Fishcake.OVERCOOKED_SECONDS.toInt()) {
-            fishcake.bake(1.0)
+        repeat(Bungeoppang.OVERCOOKED_SECONDS.toInt()) {
+            bungeoppang.bake(1.0)
         }
     }
 
-    private fun assertAllDonenessOccurred(after: Int = 0, getDoneness: (state: Fishcake.State) -> Doneness) {
+    private fun assertAllDonenessOccurred(after: Int = 0, getDoneness: (state: Bungeoppang.State) -> Doneness) {
         testSubscriber.assertNoErrors()
         testSubscriber.assertValueCount(after + Doneness.values().size)
 
@@ -69,7 +69,7 @@ class FishcakeTest{
     }
 
     private fun assertCreamAdded(cream: Cream) {
-        fishcake.addCream(cream)
+        bungeoppang.addCream(cream)
 
         testSubscriber.assertNoErrors()
         testSubscriber.assertValueCount(2)
@@ -87,12 +87,12 @@ class FishcakeTest{
 
     @Test
     fun tryAddRedBeanCreamAfterFilp() {
-        fishcake.flip()
+        bungeoppang.flip()
         assertCreamNotAdded(Cream.RedBean)
     }
 
     private fun assertCreamNotAdded(cream: Cream) {
-        fishcake.addCream(cream)
+        bungeoppang.addCream(cream)
 
         testSubscriber.assertNoErrors()
 

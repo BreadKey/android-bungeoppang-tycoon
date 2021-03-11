@@ -1,19 +1,17 @@
-package com.example.fishcaketycoon.view
+package com.breadkey.bungeoppangtycoon.view
 
 import android.annotation.SuppressLint
-import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.example.fishcaketycoon.R
-import com.example.fishcaketycoon.model.Cream
-import com.example.fishcaketycoon.model.Doneness
-import com.example.fishcaketycoon.model.Fishcake
+import com.breadkey.bungeoppangtycoon.R
+import com.breadkey.bungeoppangtycoon.model.Cream
+import com.breadkey.bungeoppangtycoon.model.Doneness
+import com.breadkey.bungeoppangtycoon.model.Bungeoppang
 
 @SuppressLint("UseCompatLoadingForDrawables")
-@BindingAdapter("app:fishcakeState")
-fun setFishcakeState(view: ImageButton, state: Fishcake.State?) {
+@BindingAdapter("app:bungeoppangState")
+fun setBungeoppangState(view: ImageButton, state: Bungeoppang.State?) {
     if (state == null) {
         view.setImageResource(R.drawable.mold)
 

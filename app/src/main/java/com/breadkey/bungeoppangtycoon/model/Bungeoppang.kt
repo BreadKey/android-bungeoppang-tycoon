@@ -1,4 +1,4 @@
-package com.example.fishcaketycoon.model
+package com.breadkey.bungeoppangtycoon.model
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -11,7 +11,7 @@ enum class Cream {
     RedBean, Chou
 }
 
-class Fishcake {
+class Bungeoppang {
     companion object {
         const val MEDIUM_SECONDS = 5.0
         const val WELL_DONE_SECONDS = 9.0
