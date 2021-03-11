@@ -11,7 +11,7 @@ enum class Cream {
     RedBean, Chou
 }
 
-class Bungeoppang {
+class Bungeoppang(initialState: State = State(Doneness.Rare, Doneness.Rare, true, null)) {
     companion object {
         const val DOUGH_COST = 100
         const val PRICE = 250
@@ -34,7 +34,7 @@ class Bungeoppang {
     }
 
     private val stateSubject =
-        BehaviorSubject.createDefault<State>(State(Doneness.Rare, Doneness.Rare, true, null))
+        BehaviorSubject.createDefault<State>(initialState)
     val state: Observable<State> = stateSubject.distinct()
     val currentState: State get() = stateSubject.value
     val canAddCream: Boolean get() = currentState.isFront && currentState.cream == null

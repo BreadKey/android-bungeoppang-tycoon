@@ -6,23 +6,34 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.random.Random
 
 @Singleton
 class BungeoppangTycoon @Inject constructor() {
     companion object {
         const val MOLD_LENGTH = 9
+        const val MAX_CUSTOMER_LENGTH = 3
         const val START_MONEY = 1000
+        private const val MIN_CUSTOMER_APPEARANCE_SECONDS = 3.0
     }
 
     interface EventListener {
         fun onCookStart(at: Int, bungeoppang: Bungeoppang)
         fun onCookFinished(at: Int, bungeoppang: Bungeoppang)
+        fun onCustomerCome(customer: Customer)
+        fun onCustomerOut(customer: Customer)
     }
 
     private val bungeoppangs = Array<Bungeoppang?>(MOLD_LENGTH) { null }
     private val cookingBungeoppangs = mutableListOf<Bungeoppang>()
     private val cookedBungeoppangs = mutableListOf<Bungeoppang>()
+    private val customers = mutableListOf<Customer>()
+    private val canBringCustomer: Boolean
+        get() = seconds % MIN_CUSTOMER_APPEARANCE_SECONDS == 0.0 &&
+                rollDice(3) == 0
+
     private val listeners = mutableListOf<EventListener>()
+
     var seconds = 0.0
         private set
     private var timer: Disposable? = null
@@ -30,6 +41,8 @@ class BungeoppangTycoon @Inject constructor() {
     private val moneySubject = BehaviorSubject.create<Int>()
     val money: Observable<Int> get() = moneySubject.distinct()
     val currentMoney: Int get() = moneySubject.value
+
+    private fun rollDice(range: Int) = Random.nextInt(range)
 
     fun addListener(listener: EventListener) {
         listeners.add(listener)
@@ -110,15 +123,60 @@ class BungeoppangTycoon @Inject constructor() {
         }
     }
 
-    fun sale(bungeoppang: Bungeoppang) {
-        cookedBungeoppangs.remove(bungeoppang)
-        moneySubject.onNext(currentMoney + Bungeoppang.PRICE)
+    fun sale(bungeoppangs: List<Bungeoppang>, to: Customer) {
+        cookedBungeoppangs.removeAll(bungeoppangs)
+
+        val amount = to.payFor(bungeoppangs)
+        moneySubject.onNext(currentMoney + amount)
     }
 
     internal fun update(delta: Double) {
         seconds += delta
+        bakeBungeoppangs(delta)
+        updateCustomers(delta)
+        bringCustomerByRandom()
+    }
+
+    private fun bakeBungeoppangs(delta: Double) {
         cookingBungeoppangs.forEach { bungeoppang ->
             bungeoppang.bake(delta)
+        }
+    }
+
+    private fun updateCustomers(delta: Double) {
+        customers.forEach { customer ->
+            customer.update(delta)
+        }
+    }
+
+    private fun bringCustomerByRandom() {
+        if (customers.size < MAX_CUSTOMER_LENGTH) {
+            if (canBringCustomer) {
+                val bungeoppangCount = rollDice(6) + 1
+                val redBeanCount = rollDice(bungeoppangCount)
+
+                val initialSatisfaction = 100.0 - rollDice(5) * 10
+                bringCustomer(
+                    initialSatisfaction,
+                    Customer.Order(redBeanCount, bungeoppangCount - redBeanCount)
+                )
+            }
+        }
+    }
+
+    internal fun bringCustomer(initialSatisfaction: Double, order: Customer.Order) {
+        val customer =
+            Customer(
+                initialSatisfaction,
+                order
+            )
+
+        customers.add(
+            customer
+        )
+
+        for (listener in listeners) {
+            listener.onCustomerCome(customer)
         }
     }
 }

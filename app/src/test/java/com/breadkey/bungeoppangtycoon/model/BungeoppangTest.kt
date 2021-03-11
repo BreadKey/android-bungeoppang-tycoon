@@ -100,3 +100,6 @@ class BungeoppangTest{
         assertNotEquals(cream, values.last().cream)
     }
 }
+
+fun generatePerfectBungeoppang(cream: Cream) =
+    Bungeoppang(Bungeoppang.State(Doneness.WellDone, Doneness.WellDone, false, cream))
