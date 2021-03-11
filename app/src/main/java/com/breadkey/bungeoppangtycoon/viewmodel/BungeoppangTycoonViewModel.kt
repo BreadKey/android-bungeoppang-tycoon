@@ -2,6 +2,8 @@ package com.breadkey.bungeoppangtycoon.viewmodel
 
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.breadkey.bungeoppangtycoon.model.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +24,7 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
     }
 
     val money = ObservableField<Int>()
+    val grade = ObservableField<Int>()
 
     private val customerSubscribers = mutableListOf<Disposable>()
 
@@ -30,10 +33,14 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
     val cookedBungeoppangs = ObservableArrayList<Bungeoppang>()
     private val selectedBungeoppangs = mutableListOf<Bungeoppang>()
 
+    val gameOver = MutableLiveData<Boolean>(false)
+
     init {
         bungeoppangTycoon.addListener(this)
         tycoonSubscribers.addAll(bungeoppangTycoon.money.subscribe {
             money.set(it)
+        }, bungeoppangTycoon.grade.subscribe {
+            grade.set(it)
         })
         bungeoppangTycoon.start()
     }
@@ -92,6 +99,13 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
         selectedBungeoppangs.remove(bungeoppang)
     }
 
+    fun restart() {
+        bungeoppangTycoon.start()
+        customers.clear()
+        cookedBungeoppangs.clear()
+        gameOver.postValue(false)
+    }
+
     override fun onCookStart(at: Int, bungeoppang: Bungeoppang) {
         bungeoppangSubscribers[at]?.dispose()
         bungeoppangSubscribers[at] = bungeoppang.state.subscribe {
@@ -118,5 +132,9 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
         customerSubscribers[index].dispose()
         customerSubscribers.removeAt(index)
         customers.removeAt(index)
+    }
+
+    override fun onGameOver() {
+        gameOver.postValue(true)
     }
 }

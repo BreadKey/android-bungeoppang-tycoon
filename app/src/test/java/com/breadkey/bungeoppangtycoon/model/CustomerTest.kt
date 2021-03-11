@@ -23,6 +23,11 @@ class CustomerTest {
             testSubscriber.assertValueAt(index, Mood.values()[index])
         }
 
+        customer.satisfaction = 100.0
+        customer.payFor(emptyList())
+
+        assertEquals(Mood.VeryHappy, testSubscriber.values().last())
+
         testSubscriber.dispose()
     }
 

@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 @Singleton
@@ -14,6 +15,7 @@ class BungeoppangTycoon @Inject constructor() {
         const val MOLD_LENGTH = 9
         const val MAX_CUSTOMER_LENGTH = 3
         const val START_MONEY = 1000
+        const val MIN_CUSTOMER_FOR_GRADE = 5
         private const val MIN_CUSTOMER_APPEARANCE_SECONDS = 3.0
     }
 
@@ -22,24 +24,33 @@ class BungeoppangTycoon @Inject constructor() {
         fun onCookFinished(at: Int, bungeoppang: Bungeoppang)
         fun onCustomerCome(customer: Customer)
         fun onCustomerOut(customer: Customer)
+        fun onGameOver()
     }
 
     private val bungeoppangs = Array<Bungeoppang?>(MOLD_LENGTH) { null }
     private val cookingBungeoppangs = mutableListOf<Bungeoppang>()
+    private val cookedBungeoppangs = mutableListOf<Bungeoppang>()
     private val customers = mutableListOf<Customer>()
-    private val canBringCustomer: Boolean
-        get() = seconds % MIN_CUSTOMER_APPEARANCE_SECONDS == 0.0 &&
-                rollDice(3) == 0
-
+    private var customerCount = 0
+    private var totalScore = 0.0
     private val listeners = mutableListOf<EventListener>()
 
     var seconds = 0.0
         private set
     private var timer: Disposable? = null
+    private val canBringCustomer: Boolean
+        get() = seconds % MIN_CUSTOMER_APPEARANCE_SECONDS == 0.0 &&
+                rollDice(3) == 0
 
     private val moneySubject = BehaviorSubject.create<Int>()
-    val money: Observable<Int> get() = moneySubject.distinct()
+    val money: Observable<Int> get() = moneySubject.distinctUntilChanged()
     val currentMoney: Int get() = moneySubject.value
+
+    private val gradeSubject = BehaviorSubject.create<Int>()
+    val grade: Observable<Int> get() = gradeSubject.distinctUntilChanged()
+    val currentGrade: Int get() = gradeSubject.value
+
+    private val isBankruptcy get():Boolean = currentMoney == 0 && cookingBungeoppangs.isEmpty() && cookedBungeoppangs.isEmpty()
 
     private fun rollDice(range: Int) = Random.nextInt(range)
 
@@ -55,7 +66,12 @@ class BungeoppangTycoon @Inject constructor() {
         seconds = 0.0
         bungeoppangs.fill(null)
         cookingBungeoppangs.clear()
+        cookedBungeoppangs.clear()
+        customers.clear()
         moneySubject.onNext(START_MONEY)
+        totalScore = 0.0
+        customerCount = 0
+        gradeSubject.onNext(0)
 
         resume()
     }
@@ -114,6 +130,7 @@ class BungeoppangTycoon @Inject constructor() {
         val bungeoppang = bungeoppangs[index]!!
         bungeoppangs[index] = null
         cookingBungeoppangs.remove(bungeoppang)
+        cookedBungeoppangs.add(bungeoppang)
 
         for (listener in listeners) {
             listener.onCookFinished(index, bungeoppang)
@@ -127,14 +144,43 @@ class BungeoppangTycoon @Inject constructor() {
         moneySubject.onNext(currentMoney + amount)
 
         customers.remove(to)
+        cookedBungeoppangs.removeAll(bungeoppangs)
 
         Observable.timer(1, TimeUnit.SECONDS).subscribe {
-            for (listener in listeners) {
-                listener.onCustomerOut(to)
+            customerOut(to)
+            if (isBankruptcy) {
+                gameOver()
             }
         }
 
         return true
+    }
+
+
+    private fun customerOut(customer: Customer) {
+        for (listener in listeners) {
+            listener.onCustomerOut(customer)
+        }
+
+        customerCount++
+        totalScore += customer.satisfaction
+
+        val grade = ((totalScore / customerCount) / 10).roundToInt()
+
+        if (customerCount >= MIN_CUSTOMER_FOR_GRADE) {
+            gradeSubject.onNext(grade)
+
+            if (grade <= 1) {
+                gameOver()
+            }
+        }
+    }
+
+    private fun gameOver() {
+        stop()
+        for (listener in listeners) {
+            listener.onGameOver()
+        }
     }
 
     internal fun update(delta: Double) {
@@ -156,9 +202,7 @@ class BungeoppangTycoon @Inject constructor() {
 
             if (customer.satisfaction <= 0.0) {
                 customers.remove(customer)
-                for (listener in listeners) {
-                    listener.onCustomerOut(customer)
-                }
+                customerOut(customer)
             }
         }
     }

@@ -29,7 +29,7 @@ class Customer(
     internal var satisfaction: Double = initialSatisfaction
     private val moodSubject =
         BehaviorSubject.createDefault<Mood>(moodFromSatisfaction())
-    val mood: Observable<Mood> = moodSubject.distinct()
+    val mood: Observable<Mood> = moodSubject.distinctUntilChanged()
     val currentMood: Mood get() = moodSubject.value
 
     private fun moodFromSatisfaction(): Mood {

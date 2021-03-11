@@ -1,21 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.breadkey.bungeoppangtycoon.viewmodel.BungeoppangTycoonViewModel" />
     </data>
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="4dp"
         android:layout_marginStart="4dp"
+        android:layout_marginBottom="4dp"
         android:elevation="2dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
-            app:money="@{viewModel.money}"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_baseline_star_24"
+                android:visibility="@{viewModel.grade &lt; 2 ? View.GONE : View.VISIBLE}" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_baseline_star_24"
+                android:visibility="@{viewModel.grade &lt; 4 ? View.GONE : View.VISIBLE}" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_baseline_star_24"
+                android:visibility="@{viewModel.grade &lt; 6 ? View.GONE : View.VISIBLE}" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_baseline_star_24"
+                android:visibility="@{viewModel.grade &lt; 8 ? View.GONE : View.VISIBLE}" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_baseline_star_24"
+                android:visibility="@{viewModel.grade &lt; 9 ? View.GONE : View.VISIBLE}" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_weight="1"
+                android:text="1000"
+                android:textAlignment="textEnd"
+                app:money="@{viewModel.money}" />
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>

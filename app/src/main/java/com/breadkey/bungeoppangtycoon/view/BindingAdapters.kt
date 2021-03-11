@@ -67,6 +67,13 @@ fun setMoney(view: TextView, money: Int?) {
     view.text = "$string₩"
 }
 
+@SuppressLint("SetTextI18n")
+@BindingAdapter("grade")
+fun setGrade(view: TextView, grade: Int?) {
+    val string = grade?.toString() ?: "--"
+    view.text = "$string "
+}
+
 @BindingAdapter("mood")
 fun setMood(view: ImageView, mood: Mood?) {
     if (mood == null) {
