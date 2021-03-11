@@ -31,7 +31,7 @@ class BungeoppangTycoonTest {
         assertEquals(2.0, tycoon.seconds, 2.0)
 
         assertNull(tycoon.getBungeoppangAt(0))
-        tycoon.select(0)
+        tycoon.cook(0)
 
         tycoon.update(Doneness.Medium.seconds)
         assertEquals(Doneness.Medium, tycoon.getBungeoppangAt(0)?.currentState?.frontDoneness)

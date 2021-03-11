@@ -27,6 +27,8 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
 
     val customers = ObservableArrayList<Customer>()
 
+    private val selectedBungeoppangs = mutableListOf<Bungeoppang>()
+
     init {
         bungeoppangTycoon.addListener(this)
         tycoonSubscribers.addAll(bungeoppangTycoon.money.subscribe {
@@ -48,8 +50,8 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
         super.onCleared()
     }
 
-    fun select(index: Int) {
-        bungeoppangTycoon.select(index)
+    fun cook(index: Int) {
+        bungeoppangTycoon.cook(index)
     }
 
     fun pause() {
@@ -63,6 +65,46 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
     fun canAddCream(at: Int) = bungeoppangTycoon.getBungeoppangAt(at)?.canAddCream == true
     fun addCream(at: Int, cream: Cream) {
         bungeoppangTycoon.addCream(at, cream)
+    }
+
+    fun sale(customer: Customer?) {
+        if (customer != null)
+            bungeoppangTycoon.sale(
+                listOf(
+                    Bungeoppang(
+                        Bungeoppang.State(
+                            Doneness.WellDone,
+                            Doneness.WellDone,
+                            false,
+                            Cream.RedBean
+                        )
+                    ),
+                    Bungeoppang(
+                        Bungeoppang.State(
+                            Doneness.WellDone,
+                            Doneness.WellDone,
+                            false,
+                            Cream.RedBean
+                        )
+                    ),
+                    Bungeoppang(
+                        Bungeoppang.State(
+                            Doneness.WellDone,
+                            Doneness.WellDone,
+                            false,
+                            Cream.Chou
+                        )
+                    ),
+                    Bungeoppang(
+                        Bungeoppang.State(
+                            Doneness.WellDone,
+                            Doneness.WellDone,
+                            false,
+                            Cream.Chou
+                        )
+                    )
+                ), customer
+            )
     }
 
     override fun onCookStart(at: Int, bungeoppang: Bungeoppang) {

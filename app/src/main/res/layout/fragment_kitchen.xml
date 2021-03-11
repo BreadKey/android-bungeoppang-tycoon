@@ -48,7 +48,7 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:bungeoppangState="@{viewModel.molds[0]}"
-                android:onClick="@{() -> viewModel.select(0)}"
+                android:onClick="@{() -> viewModel.cook(0)}"
                 />
             <ImageButton
                 android:backgroundTint="@color/mold"
@@ -58,7 +58,7 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:bungeoppangState="@{viewModel.molds[1]}"
-                android:onClick="@{() -> viewModel.select(1)}"
+                android:onClick="@{() -> viewModel.cook(1)}"
                 />
             <ImageButton
                 android:backgroundTint="@color/mold"
@@ -68,7 +68,7 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:bungeoppangState="@{viewModel.molds[2]}"
-                android:onClick="@{() -> viewModel.select(2)}"
+                android:onClick="@{() -> viewModel.cook(2)}"
                 />
             <ImageButton
                 android:backgroundTint="@color/mold"
@@ -78,7 +78,7 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:bungeoppangState="@{viewModel.molds[3]}"
-                android:onClick="@{() -> viewModel.select(3)}"
+                android:onClick="@{() -> viewModel.cook(3)}"
                 />
             <ImageButton
                 android:backgroundTint="@color/mold"
@@ -88,7 +88,7 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:bungeoppangState="@{viewModel.molds[4]}"
-                android:onClick="@{() -> viewModel.select(4)}"
+                android:onClick="@{() -> viewModel.cook(4)}"
                 />
             <ImageButton
                 android:backgroundTint="@color/mold"
@@ -98,7 +98,7 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:bungeoppangState="@{viewModel.molds[5]}"
-                android:onClick="@{() -> viewModel.select(5)}"
+                android:onClick="@{() -> viewModel.cook(5)}"
                 />
             <ImageButton
                 android:backgroundTint="@color/mold"
@@ -108,7 +108,7 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:bungeoppangState="@{viewModel.molds[6]}"
-                android:onClick="@{() -> viewModel.select(6)}"
+                android:onClick="@{() -> viewModel.cook(6)}"
                 />
             <ImageButton
                 android:backgroundTint="@color/mold"
@@ -118,7 +118,7 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:bungeoppangState="@{viewModel.molds[7]}"
-                android:onClick="@{() -> viewModel.select(7)}"
+                android:onClick="@{() -> viewModel.cook(7)}"
                 />
             <ImageButton
                 android:backgroundTint="@color/mold"
@@ -128,7 +128,7 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:bungeoppangState="@{viewModel.molds[8]}"
-                android:onClick="@{() -> viewModel.select(8)}"
+                android:onClick="@{() -> viewModel.cook(8)}"
                 />
         </GridLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

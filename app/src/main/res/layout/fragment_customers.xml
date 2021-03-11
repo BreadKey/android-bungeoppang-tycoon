@@ -15,18 +15,21 @@
         android:orientation="horizontal">
 
         <include
+            app:viewModel="@{viewModel}"
             app:customer="@{viewModel.customers[0]}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             layout="@layout/customer"/>
         <include
+            app:viewModel="@{viewModel}"
             app:customer="@{viewModel.customers[1]}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             layout="@layout/customer"/>
         <include
+            app:viewModel="@{viewModel}"
             app:customer="@{viewModel.customers[2]}"
             android:layout_width="0dp"
             android:layout_height="match_parent"

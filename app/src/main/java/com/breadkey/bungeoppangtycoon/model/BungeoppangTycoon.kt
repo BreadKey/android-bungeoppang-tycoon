@@ -81,7 +81,7 @@ class BungeoppangTycoon @Inject constructor() {
         return bungeoppangs[index]
     }
 
-    fun select(index: Int) {
+    fun cook(index: Int) {
         val bungeoppang = bungeoppangs[index]
         if (bungeoppang == null) {
             startCook(index)
@@ -124,10 +124,20 @@ class BungeoppangTycoon @Inject constructor() {
     }
 
     fun sale(bungeoppangs: List<Bungeoppang>, to: Customer) {
+        if (!customers.contains(to)) return
+
         cookedBungeoppangs.removeAll(bungeoppangs)
 
         val amount = to.payFor(bungeoppangs)
         moneySubject.onNext(currentMoney + amount)
+
+        customers.remove(to)
+
+        Observable.timer(1, TimeUnit.SECONDS).subscribe {
+            for (listener in listeners) {
+                listener.onCustomerOut(to)
+            }
+        }
     }
 
     internal fun update(delta: Double) {

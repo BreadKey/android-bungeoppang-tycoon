@@ -1,9 +1,11 @@
 package com.breadkey.bungeoppangtycoon.view
 
 import android.annotation.SuppressLint
+import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.databinding.BindingAdapter
 import com.breadkey.bungeoppangtycoon.R
 import com.breadkey.bungeoppangtycoon.model.*
@@ -75,4 +77,25 @@ val Mood.drawable get(): Int = when(this) {
     Mood.Grumpy -> R.drawable.grumpy
     Mood.VeryGrumpy -> R.drawable.very_grumpy
     Mood.Furious -> R.drawable.furious
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("order")
+fun setOrder(view: CardView, order: Customer.Order?) {
+    if (order == null) {
+        view.visibility = View.GONE
+    } else {
+        view.visibility = View.VISIBLE
+        val redBeanInfo = view.findViewById<View>(R.id.red_bean_info).also { it.visibility = View.VISIBLE }
+        val chouInfo = view.findViewById<View>(R.id.chou_info).also { it.visibility = View.VISIBLE }
+
+        if (order.redBean == 0) {
+            redBeanInfo.visibility = View.GONE
+        } else if (order.chou == 0) {
+            chouInfo.visibility = View.GONE
+        }
+
+        view.findViewById<TextView>(R.id.red_bean_count).text = "x${order.redBean}"
+        view.findViewById<TextView>(R.id.chou_count).text = "x${order.chou}"
+    }
 }
