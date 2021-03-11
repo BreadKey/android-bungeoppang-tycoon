@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.breadkey.bungeoppangtycoon.R
 import com.breadkey.bungeoppangtycoon.databinding.FragmentKitchenBinding
+import com.breadkey.bungeoppangtycoon.databinding.MoldBinding
 import com.breadkey.bungeoppangtycoon.model.Cream
 import com.breadkey.bungeoppangtycoon.model.BungeoppangTycoon
 import com.breadkey.bungeoppangtycoon.viewmodel.BungeoppangTycoonViewModel
@@ -31,6 +32,7 @@ class KitchenFragment : Fragment(R.layout.fragment_kitchen) {
         repeat(BungeoppangTycoon.MOLD_LENGTH) { index ->
             setMoldCanDrop(binding.moldGrid.getChildAt(index), index)
         }
+        binding.cookedBungeoppangs.adapter = CookedBungeoppangsAdapter(viewModel)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -93,7 +95,7 @@ class KitchenFragment : Fragment(R.layout.fragment_kitchen) {
             v.invalidate()
         }
 
-        view.setOnDragListener { v, dragEvent ->
+        view.findViewById<ImageButton>(R.id.mold).setOnDragListener { v, dragEvent ->
             when (dragEvent.action) {
                 DragEvent.ACTION_DRAG_STARTED -> {
                     dragEvent.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
@@ -129,11 +131,5 @@ class KitchenFragment : Fragment(R.layout.fragment_kitchen) {
         get() = when (this) {
             Cream.RedBean -> R.drawable.pick_red_bean_cream
             else -> R.drawable.pick_chou_cream
-        }
-
-    private val Cream.color: Int
-        get() = when (this) {
-            Cream.RedBean -> R.color.read_bean
-            else -> R.color.chou
         }
 }

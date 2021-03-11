@@ -6,28 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/customers_fragment"
+        android:name="com.breadkey.bungeoppangtycoon.view.CustomersFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="w,1:1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/kitchen_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.breadkey.bungeoppangtycoon.view.KitchenFragment"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintBottom_toTopOf="@id/kitchen_fragment"
+        app:layout_constraintTop_toBottomOf="@id/money_board_fragment" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="200dp"
-        android:layout_height="64dp"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/kitchen_fragment"
+        android:name="com.breadkey.bungeoppangtycoon.view.KitchenFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/money_board_fragment"
+        android:name="com.breadkey.bungeoppangtycoon.view.MoneyBoardFragment"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/money_board_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.breadkey.bungeoppangtycoon.view.MoneyBoardFragment" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="240dp"
+        android:layout_height="64dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

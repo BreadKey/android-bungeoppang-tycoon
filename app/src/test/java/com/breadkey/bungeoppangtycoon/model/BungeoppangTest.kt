@@ -41,7 +41,7 @@ class BungeoppangTest{
     }
 
     private fun bakeUntilOvercooked() {
-        repeat(Bungeoppang.OVERCOOKED_SECONDS.toInt()) {
+        repeat(Doneness.Overcooked.seconds.toInt()) {
             bungeoppang.bake(1.0)
         }
     }
@@ -100,3 +100,6 @@ class BungeoppangTest{
         assertNotEquals(cream, values.last().cream)
     }
 }
+
+fun generatePerfectBungeoppang(cream: Cream) =
+    Bungeoppang(Bungeoppang.State(Doneness.WellDone, Doneness.WellDone, false, cream))
