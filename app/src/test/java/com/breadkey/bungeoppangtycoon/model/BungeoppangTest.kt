@@ -41,7 +41,7 @@ class BungeoppangTest{
     }
 
     private fun bakeUntilOvercooked() {
-        repeat(Bungeoppang.OVERCOOKED_SECONDS.toInt()) {
+        repeat(Doneness.Overcooked.seconds.toInt()) {
             bungeoppang.bake(1.0)
         }
     }

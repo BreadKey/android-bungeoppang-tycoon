@@ -3,8 +3,8 @@ package com.breadkey.bungeoppangtycoon.model
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-enum class Doneness {
-    Rare, Medium, WellDone, Overcooked
+enum class Doneness(val seconds: Double) {
+    Rare(0.0), Medium(5.0), WellDone(9.0), Overcooked(12.0)
 }
 
 enum class Cream {
@@ -13,9 +13,6 @@ enum class Cream {
 
 class Bungeoppang {
     companion object {
-        const val MEDIUM_SECONDS = 5.0
-        const val WELL_DONE_SECONDS = 9.0
-        const val OVERCOOKED_SECONDS = 12.0
         const val DOUGH_COST = 100
         const val PRICE = 250
     }
@@ -48,9 +45,9 @@ class Bungeoppang {
         bakedSeconds += seconds
 
         val doneness = when {
-            bakedSeconds >= OVERCOOKED_SECONDS -> Doneness.Overcooked
-            bakedSeconds >= WELL_DONE_SECONDS -> Doneness.WellDone
-            bakedSeconds >= MEDIUM_SECONDS -> Doneness.Medium
+            bakedSeconds >= Doneness.Overcooked.seconds -> Doneness.Overcooked
+            bakedSeconds >= Doneness.WellDone.seconds -> Doneness.WellDone
+            bakedSeconds >= Doneness.Medium.seconds -> Doneness.Medium
             else -> Doneness.Rare
         }
 
