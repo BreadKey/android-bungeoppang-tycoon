@@ -27,6 +27,7 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
 
     val customers = ObservableArrayList<Customer>()
 
+    val cookedBungeoppangs = ObservableArrayList<Bungeoppang>()
     private val selectedBungeoppangs = mutableListOf<Bungeoppang>()
 
     init {
@@ -68,43 +69,27 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
     }
 
     fun sale(customer: Customer?) {
-        if (customer != null)
-            bungeoppangTycoon.sale(
-                listOf(
-                    Bungeoppang(
-                        Bungeoppang.State(
-                            Doneness.WellDone,
-                            Doneness.WellDone,
-                            false,
-                            Cream.RedBean
-                        )
-                    ),
-                    Bungeoppang(
-                        Bungeoppang.State(
-                            Doneness.WellDone,
-                            Doneness.WellDone,
-                            false,
-                            Cream.RedBean
-                        )
-                    ),
-                    Bungeoppang(
-                        Bungeoppang.State(
-                            Doneness.WellDone,
-                            Doneness.WellDone,
-                            false,
-                            Cream.Chou
-                        )
-                    ),
-                    Bungeoppang(
-                        Bungeoppang.State(
-                            Doneness.WellDone,
-                            Doneness.WellDone,
-                            false,
-                            Cream.Chou
-                        )
-                    )
-                ), customer
-            )
+        if (customer != null) {
+            if(bungeoppangTycoon.sale(
+                    selectedBungeoppangs, customer
+                )) {
+                for (selectedBungeoppang in selectedBungeoppangs) {
+                    cookedBungeoppangs.remove(selectedBungeoppang)
+                }
+                selectedBungeoppangs.clear()
+            }
+        }
+    }
+
+    fun isSelected(bungeoppang: Bungeoppang): Boolean {
+        return selectedBungeoppangs.contains(bungeoppang)
+    }
+
+    fun select(bungeoppang: Bungeoppang) {
+        selectedBungeoppangs.add(bungeoppang)
+    }
+    fun deselect(bungeoppang: Bungeoppang) {
+        selectedBungeoppangs.remove(bungeoppang)
     }
 
     override fun onCookStart(at: Int, bungeoppang: Bungeoppang) {
@@ -117,6 +102,7 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
     override fun onCookFinished(at: Int, bungeoppang: Bungeoppang) {
         bungeoppangSubscribers[at]?.dispose()
         molds[at].set(null)
+        cookedBungeoppangs.add(bungeoppang)
     }
 
     override fun onCustomerCome(customer: Customer) {

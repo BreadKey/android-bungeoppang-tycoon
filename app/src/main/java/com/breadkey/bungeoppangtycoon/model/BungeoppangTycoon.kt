@@ -26,7 +26,6 @@ class BungeoppangTycoon @Inject constructor() {
 
     private val bungeoppangs = Array<Bungeoppang?>(MOLD_LENGTH) { null }
     private val cookingBungeoppangs = mutableListOf<Bungeoppang>()
-    private val cookedBungeoppangs = mutableListOf<Bungeoppang>()
     private val customers = mutableListOf<Customer>()
     private val canBringCustomer: Boolean
         get() = seconds % MIN_CUSTOMER_APPEARANCE_SECONDS == 0.0 &&
@@ -55,7 +54,6 @@ class BungeoppangTycoon @Inject constructor() {
     fun start() {
         seconds = 0.0
         bungeoppangs.fill(null)
-        cookedBungeoppangs.clear()
         cookingBungeoppangs.clear()
         moneySubject.onNext(START_MONEY)
 
@@ -116,17 +114,14 @@ class BungeoppangTycoon @Inject constructor() {
         val bungeoppang = bungeoppangs[index]!!
         bungeoppangs[index] = null
         cookingBungeoppangs.remove(bungeoppang)
-        cookedBungeoppangs.add(bungeoppang)
 
         for (listener in listeners) {
             listener.onCookFinished(index, bungeoppang)
         }
     }
 
-    fun sale(bungeoppangs: List<Bungeoppang>, to: Customer) {
-        if (!customers.contains(to)) return
-
-        cookedBungeoppangs.removeAll(bungeoppangs)
+    fun sale(bungeoppangs: List<Bungeoppang>, to: Customer): Boolean {
+        if (!customers.contains(to)) return false
 
         val amount = to.payFor(bungeoppangs)
         moneySubject.onNext(currentMoney + amount)
@@ -138,6 +133,8 @@ class BungeoppangTycoon @Inject constructor() {
                 listener.onCustomerOut(to)
             }
         }
+
+        return true
     }
 
     internal fun update(delta: Double) {
