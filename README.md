@@ -1,5 +1,5 @@
 # Bungeoppang Tyccon
-The simple bungeoppang tycoon application for my skills
+A simple bungeoppang tycoon application for my skills
 * Hilt for Dipendency Injection
 * MVVM and Data Binding for Architecture
 * RxJava for Reactive Programming
