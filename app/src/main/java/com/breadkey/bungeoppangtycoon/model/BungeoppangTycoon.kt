@@ -144,8 +144,15 @@ class BungeoppangTycoon @Inject constructor() {
     }
 
     private fun updateCustomers(delta: Double) {
-        customers.forEach { customer ->
+        customers.toList().forEach { customer ->
             customer.update(delta)
+
+            if (customer.satisfaction <= 0.0) {
+                customers.remove(customer)
+                for (listener in listeners) {
+                    listener.onCustomerOut(customer)
+                }
+            }
         }
     }
 

@@ -2,12 +2,11 @@ package com.breadkey.bungeoppangtycoon.view
 
 import android.annotation.SuppressLint
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.breadkey.bungeoppangtycoon.R
-import com.breadkey.bungeoppangtycoon.model.Cream
-import com.breadkey.bungeoppangtycoon.model.Doneness
-import com.breadkey.bungeoppangtycoon.model.Bungeoppang
+import com.breadkey.bungeoppangtycoon.model.*
 
 @SuppressLint("UseCompatLoadingForDrawables")
 @BindingAdapter("app:bungeoppangState")
@@ -56,4 +55,24 @@ val Cream.drwable
 fun setMoney(view: TextView, money: Int?) {
     val string = money?.toString() ?: "--"
     view.text = "$string₩"
+}
+
+@BindingAdapter("mood")
+fun setMood(view: ImageView, mood: Mood?) {
+    if (mood == null) {
+        view.setImageDrawable(null)
+    } else {
+        view.setImageResource(mood.drawable)
+    }
+}
+
+val Mood.drawable get(): Int = when(this) {
+    Mood.VeryHappy -> R.drawable.very_happy
+    Mood.Happy -> R.drawable.happy
+    Mood.Satisfied -> R.drawable.satisfied
+    Mood.Neutral -> R.drawable.neutral
+    Mood.Disappointed -> R.drawable.disappointed
+    Mood.Grumpy -> R.drawable.grumpy
+    Mood.VeryGrumpy -> R.drawable.very_grumpy
+    Mood.Furious -> R.drawable.furious
 }

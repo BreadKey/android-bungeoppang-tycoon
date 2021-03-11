@@ -3,10 +3,7 @@ package com.breadkey.bungeoppangtycoon.viewmodel
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
-import com.breadkey.bungeoppangtycoon.model.Cream
-import com.breadkey.bungeoppangtycoon.model.Bungeoppang
-import com.breadkey.bungeoppangtycoon.model.BungeoppangTycoon
-import com.breadkey.bungeoppangtycoon.model.Customer
+import com.breadkey.bungeoppangtycoon.model.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -26,6 +23,8 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
 
     val money = ObservableField<Int>()
 
+    private val customerSubscribers = mutableListOf<Disposable>()
+
     val customers = ObservableArrayList<Customer>()
 
     init {
@@ -41,6 +40,9 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
         bungeoppangTycoon.stop()
         bungeoppangSubscribers.forEach {
             it?.dispose()
+        }
+        customerSubscribers.forEach {
+            it.dispose()
         }
         tycoonSubscribers.clear()
         super.onCleared()
@@ -77,9 +79,16 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
 
     override fun onCustomerCome(customer: Customer) {
         customers.add(customer)
+        customerSubscribers.add(customer.mood.subscribe {
+            customers[customers.indexOf(customer)] = customer
+            customers
+        })
     }
 
     override fun onCustomerOut(customer: Customer) {
-        customers.remove(customer)
+        val index = customers.indexOf(customer)
+        customerSubscribers[index].dispose()
+        customerSubscribers.removeAt(index)
+        customers.removeAt(index)
     }
 }

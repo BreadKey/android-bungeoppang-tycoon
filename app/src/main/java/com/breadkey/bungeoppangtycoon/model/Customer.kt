@@ -14,7 +14,7 @@ enum class Mood(val satisfaction: Int) {
     Disappointed(35),
     Grumpy(20),
     VeryGrumpy(10),
-    Furious(0)
+    Furious(5)
 }
 
 class Customer(
@@ -26,7 +26,7 @@ class Customer(
     }
     data class Evaluation(val correctCount: Int, val score: Int)
 
-    private var satisfaction: Double = initialSatisfaction
+    internal var satisfaction: Double = initialSatisfaction
     private val moodSubject =
         BehaviorSubject.createDefault<Mood>(moodFromSatisfaction())
     val mood: Observable<Mood> = moodSubject.distinct()
