@@ -171,7 +171,7 @@ class BungeoppangTycoon @Inject constructor() {
 
         customerCount++
         totalScore += if (customer.satisfaction > 0) customer.satisfaction
-        else customer.satisfaction + (level - 1) * 10
+        else customer.satisfaction - (level - 1) * 10
 
         val grade = ((totalScore / customerCount) / 10).roundToInt()
 
