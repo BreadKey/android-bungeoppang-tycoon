@@ -107,11 +107,18 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
 
     fun restart() {
         clearCustomers()
+        clearMolds()
         cookedBungeoppangs.clear()
         selectedBungeoppangs.clear()
 
         bungeoppangTycoon.start()
         gameOver.postValue(false)
+    }
+
+    private fun clearMolds() {
+        molds.forEach {
+            it.set(null)
+        }
     }
 
     override fun onCookStart(at: Int, bungeoppang: Bungeoppang) {
