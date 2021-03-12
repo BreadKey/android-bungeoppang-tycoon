@@ -53,7 +53,7 @@ class Customer(
         }
     }
 
-    fun payFor(bungeoppangs: List<Bungeoppang>): Int {
+    fun payFor(bungeoppangs: Iterable<Bungeoppang>): Int {
         val evaluation = evaluate(bungeoppangs)
 
         val amount =
@@ -66,7 +66,7 @@ class Customer(
         return max(0, amount)
     }
 
-    private fun evaluate(bungeoppangs: List<Bungeoppang>): Evaluation {
+    private fun evaluate(bungeoppangs: Iterable<Bungeoppang>): Evaluation {
         if (order.total == 0) return Evaluation(0, 0)
 
         var redBeanCount = 0
