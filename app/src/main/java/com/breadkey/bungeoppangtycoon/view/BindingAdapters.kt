@@ -160,6 +160,7 @@ fun setCookedBungeoppang(view: ImageButton, state: Bungeoppang.State) {
     when(state.cream) {
         Cream.Chou -> view.foreground = view.resources.getDrawable(R.drawable.chou_point_cooked, null)
         Cream.RedBean -> view.foreground = view.resources.getDrawable(R.drawable.red_bean_point_cooked, null)
+        else -> view.foreground = null
     }
 }
 
