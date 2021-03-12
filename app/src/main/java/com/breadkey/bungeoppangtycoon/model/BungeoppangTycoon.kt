@@ -6,6 +6,8 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -17,6 +19,8 @@ class BungeoppangTycoon @Inject constructor() {
         const val START_MONEY = 1000
         const val MIN_CUSTOMER_FOR_GRADE = 5
         private const val MIN_CUSTOMER_APPEARANCE_SECONDS = 3.0
+        private const val MAX_ORDER_COUNT = 8
+        private const val MIN_INITIAL_SATISFACTION = 51.0
     }
 
     interface EventListener {
@@ -52,6 +56,8 @@ class BungeoppangTycoon @Inject constructor() {
 
     private val isBankruptcy get():Boolean = currentMoney == 0 && cookingBungeoppangs.isEmpty() && cookedBungeoppangs.isEmpty()
 
+    private var level = 1
+
     private fun rollDice(range: Int) = Random.nextInt(range)
 
     fun addListener(listener: EventListener) {
@@ -72,6 +78,7 @@ class BungeoppangTycoon @Inject constructor() {
         totalScore = 0.0
         customerCount = 0
         gradeSubject.onNext(0)
+        level = 1
 
         resume()
     }
@@ -163,7 +170,8 @@ class BungeoppangTycoon @Inject constructor() {
         }
 
         customerCount++
-        totalScore += customer.satisfaction
+        totalScore += if (customer.satisfaction > 0) customer.satisfaction
+        else customer.satisfaction + (level - 1) * 10
 
         val grade = ((totalScore / customerCount) / 10).roundToInt()
 
@@ -186,6 +194,7 @@ class BungeoppangTycoon @Inject constructor() {
     internal fun update(delta: Double) {
         seconds += delta
         bakeBungeoppangs(delta)
+        updateLevel()
         updateCustomers(delta)
         bringCustomerByRandom()
     }
@@ -193,6 +202,12 @@ class BungeoppangTycoon @Inject constructor() {
     private fun bakeBungeoppangs(delta: Double) {
         cookingBungeoppangs.forEach { bungeoppang ->
             bungeoppang.bake(delta)
+        }
+    }
+
+    private fun updateLevel() {
+        if (seconds % 10.0 == 0.0) {
+            level++
         }
     }
 
@@ -210,10 +225,11 @@ class BungeoppangTycoon @Inject constructor() {
     private fun bringCustomerByRandom() {
         if (customers.size < MAX_CUSTOMER_LENGTH) {
             if (canBringCustomer) {
-                val bungeoppangCount = rollDice(6) + 1
+                val bungeoppangCount = min(rollDice(4 + (level + 1) / 2) + 1, MAX_ORDER_COUNT)
                 val redBeanCount = rollDice(bungeoppangCount)
 
-                val initialSatisfaction = 100.0 - rollDice(5) * 10
+                val initialSatisfaction =
+                    max(100.0 - rollDice(3 + level) * 10, MIN_INITIAL_SATISFACTION)
                 bringCustomer(
                     initialSatisfaction,
                     Customer.Order(redBeanCount, bungeoppangCount - redBeanCount)
