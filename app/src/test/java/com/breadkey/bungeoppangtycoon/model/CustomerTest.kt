@@ -23,11 +23,6 @@ class CustomerTest {
             testSubscriber.assertValueAt(index, Mood.values()[index])
         }
 
-        customer.satisfaction = 100.0
-        customer.payFor(emptyList())
-
-        assertEquals(Mood.VeryHappy, testSubscriber.values().last())
-
         testSubscriber.dispose()
     }
 
@@ -40,8 +35,18 @@ class CustomerTest {
             generatePerfectBungeoppang(Cream.Chou),
             generatePerfectBungeoppang(Cream.Chou)
         )
+        val testSubscriber = TestObserver<Mood>()
+        customer.mood.subscribe(testSubscriber)
 
-        assertEquals(Bungeoppang.PRICE * 4, customer.payFor(bungeoppangs))
+        customer.update(30.0)
+        val amount = customer.payFor(bungeoppangs)
+
+        assertEquals(Bungeoppang.PRICE * 4, amount)
+
+        testSubscriber.assertValueCount(3)
+        assertEquals(Mood.VeryHappy, testSubscriber.values().last())
+
+        testSubscriber.dispose()
     }
 
     @Test
@@ -50,6 +55,7 @@ class CustomerTest {
 
         assertEquals(0, customer.payFor(listOf(generatePerfectBungeoppang(Cream.Chou))))
         assertEquals(Mood.Furious, customer.currentMood)
+
     }
 
     @Test
