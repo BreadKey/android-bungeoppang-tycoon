@@ -206,7 +206,7 @@ class BungeoppangTycoon @Inject constructor() {
     }
 
     private fun updateLevel() {
-        if (seconds % 10.0 == 0.0) {
+        if (seconds % 15.0 == 0.0) {
             level++
         }
     }
