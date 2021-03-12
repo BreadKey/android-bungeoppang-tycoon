@@ -137,7 +137,7 @@ class BungeoppangTycoon @Inject constructor() {
         }
     }
 
-    fun sale(bungeoppangs: List<Bungeoppang>, to: Customer): Boolean {
+    fun sale(bungeoppangs: Iterable<Bungeoppang>, to: Customer): Boolean {
         if (!customers.contains(to)) return false
 
         val amount = to.payFor(bungeoppangs)

@@ -31,7 +31,7 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
     val customers = ObservableArrayList<Customer>()
 
     val cookedBungeoppangs = ObservableArrayList<Bungeoppang>()
-    private val selectedBungeoppangs = mutableListOf<Bungeoppang>()
+    private val selectedBungeoppangs = mutableSetOf<Bungeoppang>()
 
     val gameOver = MutableLiveData<Boolean>(false)
 
@@ -51,11 +51,17 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
         bungeoppangSubscribers.forEach {
             it?.dispose()
         }
+        clearCustomers()
+        tycoonSubscribers.clear()
+        super.onCleared()
+    }
+
+    private fun clearCustomers() {
         customerSubscribers.forEach {
             it.dispose()
         }
-        tycoonSubscribers.clear()
-        super.onCleared()
+        customerSubscribers.clear()
+        customers.clear()
     }
 
     fun cook(index: Int) {
@@ -100,9 +106,11 @@ class BungeoppangTycoonViewModel @Inject constructor(private val bungeoppangTyco
     }
 
     fun restart() {
-        bungeoppangTycoon.start()
-        customers.clear()
+        clearCustomers()
         cookedBungeoppangs.clear()
+        selectedBungeoppangs.clear()
+
+        bungeoppangTycoon.start()
         gameOver.postValue(false)
     }
 
