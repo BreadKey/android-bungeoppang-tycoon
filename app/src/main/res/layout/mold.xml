@@ -13,14 +13,24 @@
             type="Integer" />
     </data>
 
-    <ImageButton
-        android:id="@+id/mold"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:backgroundTint="@color/mold"
-        android:foregroundGravity="center"
-        android:onClick="@{() -> viewModel.cook(index)}"
-        android:scaleType="center"
-        android:src="@drawable/mold"
-        app:bungeoppangState="@{viewModel.molds[index]}" />
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/mold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="h, 1:1"
+            android:backgroundTint="@color/mold"
+            android:foregroundGravity="center"
+            android:onClick="@{() -> viewModel.cook(index)}"
+            android:scaleType="center"
+            android:src="@drawable/mold"
+            app:bungeoppangState="@{viewModel.molds[index]}" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
