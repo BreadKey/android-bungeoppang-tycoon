@@ -20,7 +20,7 @@ class BungeoppangTycoon @Inject constructor() {
         const val MIN_CUSTOMER_FOR_GRADE = 5
         private const val MIN_CUSTOMER_APPEARANCE_SECONDS = 3.0
         private const val MAX_ORDER_COUNT = 8
-        private const val MIN_INITIAL_SATISFACTION = 51.0
+        private val MIN_INITIAL_SATISFACTION = Mood.Satisfied.satisfaction
     }
 
     interface EventListener {

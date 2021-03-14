@@ -6,15 +6,15 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-enum class Mood(val satisfaction: Int) {
-    VeryHappy(95),
-    Happy(85),
-    Satisfied(70),
-    Neutral(50),
-    Disappointed(35),
-    Grumpy(20),
-    VeryGrumpy(10),
-    Furious(5)
+enum class Mood(val satisfaction: Double) {
+    VeryHappy(95.0),
+    Happy(85.0),
+    Satisfied(70.0),
+    Neutral(50.0),
+    Disappointed(35.0),
+    Grumpy(20.0),
+    VeryGrumpy(10.0),
+    Furious(5.0)
 }
 
 class Customer(
@@ -24,6 +24,7 @@ class Customer(
     data class Order(val redBean: Int, val chou: Int) {
         val total = redBean + chou
     }
+
     data class Evaluation(val correctCount: Int, val score: Int)
 
     internal var satisfaction: Double = initialSatisfaction
@@ -108,7 +109,7 @@ class Customer(
         return score / 2
     }
 
-    fun calculateDonenessScore(doneness: Doneness): Int = when(doneness) {
+    fun calculateDonenessScore(doneness: Doneness): Int = when (doneness) {
         Doneness.WellDone -> 100
         Doneness.Overcooked -> -70
         Doneness.Rare -> -50
