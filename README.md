@@ -1,4 +1,4 @@
-# Bungeoppang Tyccon
+# Bungeoppang Tycoon
 A simple bungeoppang tycoon application for my skills
 * Hilt for Dipendency Injection
 * MVVM and Data Binding for Architecture
